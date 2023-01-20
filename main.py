@@ -7,31 +7,33 @@ if not os.path.exists('./models'):
     os.makedirs('./models')
 
 place = 'autodl'
-dataset_name = d.DATASET_NAME_MSDC
+dataset_name = d.DATASET_NAME_MSDC          # 换数据集是需要修改
 data_dir_con = d.dir_manager(dataset_name, d.DATASET_PLACE_AUTODL)
 slice_num_list = d.get_index(dataset_name)
+data_separate = d.dataset_separate(dataset_name)
 create_torch_file = True
+epochs_num = 150
+model_name = MODEL_UNET
 
 if create_torch_file:
-    d.create_4d_torch_file('train_input.pth', data_dir_con['image'], slice_num_list[0], slice_num_list[101])
-    d.create_4d_torch_file('train_gt.pth', data_dir_con['label'], slice_num_list[0], slice_num_list[101])
-    d.create_4d_torch_file('valid_input.pth', data_dir_con['image'], slice_num_list[101], slice_num_list[103])
-    d.create_4d_torch_file('valid_gt.pth', data_dir_con['label'], slice_num_list[101], slice_num_list[103])
-    d.create_4d_torch_file('predict_input.pth', data_dir_con['image'], slice_num_list[298], slice_num_list[303])
-    d.create_4d_torch_file('predict_gt.pth', data_dir_con['label'], slice_num_list[298], slice_num_list[303])
+    d.create_4d_torch_file(data_dir_con['root']+'/train_input.pth', data_dir_con['image'], *data_separate[0])
+    d.create_4d_torch_file(data_dir_con['root']+'/train_gt.pth', data_dir_con['label'], *data_separate[0])
+    d.create_4d_torch_file(data_dir_con['root']+'/valid_input.pth', data_dir_con['image'], *data_separate[1])
+    d.create_4d_torch_file(data_dir_con['root']+'/valid_gt.pth', data_dir_con['label'], *data_separate[1])
+    d.create_4d_torch_file(data_dir_con['root']+'/predict_input.pth', data_dir_con['image'], *data_separate[2])
+    d.create_4d_torch_file(data_dir_con['root']+'/predict_gt.pth', data_dir_con['label'], *data_separate[2])
 
 train_dataset = d.data_loader(torch.load(os.path.join(data_dir_con['root'], 'train_input.pth')),
                               torch.load(os.path.join(data_dir_con['root'], 'train_gt.pth')))
 valid_dataset = d.data_loader(torch.load(os.path.join(data_dir_con['root'], 'valid_input.pth')),
                               torch.load(os.path.join(data_dir_con['root'], 'valid_gt.pth')))
 
-train = TrainUNet(in_channels=1,
-                  n_classes=1,
+train = TrainUNet(in_channels=1, n_classes=1,
                   train_dataset=train_dataset,
                   valid_dataset=valid_dataset,
-                  epochs=150,
-                  checkpoint_dir=os.path.join(data_dir_con['root'], 'checkpoint', 'unet'),
-                  model_dir=os.path.join('./models', 'unet-msdc-150.pth'))
+                  epochs=epochs_num,
+                  checkpoint_dir=os.path.join(data_dir_con['root'], 'checkpoint', model_name),
+                  model_dir=os.path.join('./models', model_name+'-'+dataset_name+'-'+str(epochs_num)+'.pth'))
 train.train()
 train.show_loss_arr()
 
@@ -39,7 +41,7 @@ predict_dataset = d.data_loader(torch.load(os.path.join(data_dir_con['root'], 'p
                                 torch.load(os.path.join(data_dir_con['root'], 'predict_gt.pth')))
 predict = PredictUNet(in_channels=1, n_classes=1,
                       predict_dataset=predict_dataset,
-                      model_dir=os.path.join('./models', 'unet-msdc-150.pth'),
-                      output_dir=os.path.join(data_dir_con['root'], 'output', 'unet-150'),
-                      output_start_index=slice_num_list[298])
+                      model_dir=os.path.join('./models', model_name+'-'+dataset_name+'-'+str(epochs_num)+'.pth'),
+                      output_dir=os.path.join(data_dir_con['root'], 'output', model_name+'-'+epochs_num),
+                      output_start_index=data_separate[2][0])
 predict.predict()

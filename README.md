@@ -1,6 +1,8 @@
 # lvsnet-pytorch
 
 基于Pytorch的分割模型框架
+更新日期2023/01/17
+版本V0.1.1
 
 ## 运行环境
 
@@ -17,7 +19,7 @@ torchvision 0.14
 
 ## 版本更新
 
-### lvsnet-pytorch V0.1.0
+### lvsnet-pytorch V0.1.1
 
 2023/01/17
 

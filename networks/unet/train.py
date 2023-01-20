@@ -42,7 +42,7 @@ class TrainUNet:
         for epoch in range(self.epochs):
             self.model.train()  # 开启训练模式
             print('Epoch: %d/%d, lr: %.6f' % (epoch+1, self.epochs,
-                                              self.optimizer.state_dict()['param_group'][0]['lr']))
+                                              self.optimizer.state_dict()['param_groups'][0]['lr']))
             epoch_loss = 0
             step = 0
             start_time = time.time()
@@ -80,7 +80,7 @@ class TrainUNet:
                 save_checkpoint = True
             if save_checkpoint:
                 best_epoch = epoch + 1
-                torch.save(self.model.state_dict(), os.path.join(self.checkpoint_dir), str(best_epoch)+'.pth')
+                torch.save(self.model.state_dict(), os.path.join(self.checkpoint_dir, str(best_epoch)+'.pth'))
 
         print('Best Epoch:', best_epoch)
         shutil.copy(os.path.join(self.checkpoint_dir, str(best_epoch)+'.pth'), self.model_dir)
@@ -111,4 +111,3 @@ class TrainUNet:
 
     def show_loss_arr(self):
         print('train loss:\n', self.loss_arr['train_loss'], '\nvalid loss:\n', self.loss_arr['valid_loss'])
-

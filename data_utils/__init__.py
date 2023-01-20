@@ -1,5 +1,5 @@
-from create_torch_file import create_4d_torch_file
-from data_loader import data_loader
+from .create_torch_file import create_4d_torch_file
+from .data_loader import data_loader
 
 
 DATASET_NAME_MSDC = 'MSDC'
@@ -67,3 +67,13 @@ def dir_manager(dataset_name, where_are_you):
         'image': image_root,
         'label': label_root
     }
+
+
+def dataset_separate(dataset_name):
+    if dataset_name == 'MSDC':
+        return (0, 101), (101, 103), (298, 303)
+    elif dataset_name == '3dircadb':
+        return (0, 14), (14, 15), (15, 20)
+    else:
+        print('default')
+        exit(-1)

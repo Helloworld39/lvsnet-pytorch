@@ -20,3 +20,9 @@ UPSAMPLE_NEAREST = 2
 # model name
 MODEL_UNET = 'unet'
 MODEL_UNET3D = 'unet3d'
+
+# target name
+TARGET_LIVER = 'liver'
+TARGET_VESSEL = 'vessel'
+TARGET_PORTAL = 'portal'
+TARGET_VEIN = 'vein'

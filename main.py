@@ -6,8 +6,7 @@ from networks import *
 if not os.path.exists('./models'):
     os.makedirs('./models')
 
-place = 'autodl'
-dataset_name = d.DATASET_NAME_MSDC          # 换数据集是需要修改
+dataset_name = d.DATASET_NAME_3D          # 换数据集是需要修改
 data_dir_con = d.dir_manager(dataset_name, d.DATASET_PLACE_AUTODL)
 slice_num_list = d.get_index(dataset_name)
 data_separate = d.dataset_separate(dataset_name)
@@ -17,11 +16,11 @@ model_name = MODEL_UNET
 
 if create_torch_file:
     d.create_4d_torch_file(data_dir_con['root']+'/train_input.pth', data_dir_con['image'], *data_separate[0])
-    d.create_4d_torch_file(data_dir_con['root']+'/train_gt.pth', data_dir_con['label'], *data_separate[0])
+    d.create_4d_torch_file(data_dir_con['root']+'/train_gt.pth', data_dir_con['vessel'], *data_separate[0])
     d.create_4d_torch_file(data_dir_con['root']+'/valid_input.pth', data_dir_con['image'], *data_separate[1])
-    d.create_4d_torch_file(data_dir_con['root']+'/valid_gt.pth', data_dir_con['label'], *data_separate[1])
+    d.create_4d_torch_file(data_dir_con['root']+'/valid_gt.pth', data_dir_con['vessel'], *data_separate[1])
     d.create_4d_torch_file(data_dir_con['root']+'/predict_input.pth', data_dir_con['image'], *data_separate[2])
-    d.create_4d_torch_file(data_dir_con['root']+'/predict_gt.pth', data_dir_con['label'], *data_separate[2])
+    d.create_4d_torch_file(data_dir_con['root']+'/predict_gt.pth', data_dir_con['vessel'], *data_separate[2])
 
 train_dataset = d.data_loader(torch.load(os.path.join(data_dir_con['root'], 'train_input.pth')),
                               torch.load(os.path.join(data_dir_con['root'], 'train_gt.pth')))

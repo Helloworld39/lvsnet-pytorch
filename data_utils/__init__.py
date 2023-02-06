@@ -1,9 +1,10 @@
 from .create_torch_file import create_4d_torch_file
 from .data_loader import data_loader
+from .read_ct import read_nii, read_dicom
 
 
-DATASET_NAME_MSDC = 'MSDC'
-DATASET_NAME_3D = '3dircadb'
+DATASET_NAME_MSDC = 'msdc'
+DATASET_NAME_3D = '3dircadb1'
 DATASET_NAME_COMPANY = 'company'
 
 DATASET_PLACE_LOCAL = 'local'
@@ -11,7 +12,7 @@ DATASET_PLACE_AUTODL = 'autodl'
 
 
 def get_index(dataset_name):
-    if dataset_name == 'MSDC':
+    if dataset_name == 'msdc':
         return [1, 50, 116, 159, 200, 250, 297, 346, 383, 420, 456, 492, 537, 576, 619, 675, 734, 786, 835, 875, 918,
                 957, 1065, 1125, 1263, 1308, 1352, 1397, 1438, 1524, 1550, 1591, 1625, 1655, 1697, 1735, 1768, 1805,
                 1847, 1887, 1926, 1975, 2015, 2055, 2104, 2141, 2185, 2222, 2261, 2308, 2400, 2445, 2499, 2549, 2603,
@@ -32,7 +33,7 @@ def get_index(dataset_name):
                 18657, 18791, 18828, 18980, 19021, 19155, 19202, 19229, 19363, 19397, 19427, 19561, 19609, 19757,
                 19791, 19846, 19984, 20036, 20133, 20182, 20230, 20358, 20445, 20613, 20660, 20710, 20760, 20791,
                 20838, 20952, 21121]
-    elif dataset_name == '3dircadb':
+    elif dataset_name == '3dircadb1':
         return [1, 130, 302, 502, 593, 732, 867, 1018, 1142, 1253, 1375, 1507, 1767, 1889, 2002, 2127, 2282, 2401,
                 2475, 2599, 2824]
     elif dataset_name == 'company':
@@ -61,18 +62,26 @@ def dir_manager(dataset_name, where_are_you):
 
     image_root = dataset_root + '/images'
     label_root = dataset_root + '/labels'
+    portal_root = dataset_root + '/portal'
+    vein_root = dataset_root + '/vein'
+    vessel_root = dataset_root + '/vessel'
+    liver_root = dataset_root + '/liver'
 
     return {
         'root': dataset_root,
         'image': image_root,
-        'label': label_root
+        'label': label_root,
+        'portal': portal_root,
+        'vein': vein_root,
+        'vessel': vessel_root,
+        'liver': liver_root
     }
 
 
 def dataset_separate(dataset_name):
-    if dataset_name == 'MSDC':
+    if dataset_name == 'msdc':
         return (0, 101), (101, 103), (298, 303)
-    elif dataset_name == '3dircadb':
+    elif dataset_name == '3dircadb1':
         return (0, 14), (14, 15), (15, 20)
     else:
         print('default')

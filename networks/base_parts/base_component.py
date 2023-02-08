@@ -27,14 +27,44 @@ class Output2D(nn.Module):
         super().__init__()
         self.conv = SimpleConvUnit2D(in_channels, n_classes)
         if n_classes == 1:
-            self.out = nn.Sequential(nn.Conv2d(1, 1, 1),
-                                     nn.Sigmoid())
+            self.out = nn.Sequential(nn.Conv2d(1, 1, 1), nn.Sigmoid())
         elif n_classes >= 2:
-            self.out = nn.Sequential(nn.Conv2d(n_classes, n_classes, 1),
-                                     nn.Softmax())
+            self.out = nn.Sequential(nn.Conv2d(n_classes, n_classes, 1), nn.Softmax())
         else:
             print('n_classes:', n_classes, '错误参数')
             exit(0)
+
+    def forward(self, x):
+        x = self.conv(x)
+        return self.out(x)
+
+
+class Input3D(nn.Module):
+    """
+    3D图像输入层
+    """
+    def __init__(self, in_channels, out_channels):
+        super().__init__()
+        self.conv = DoubleConvUnit3D(in_channels, out_channels)
+
+    def forward(self, x):
+        return self.conv(x)
+
+
+class Output3D(nn.Module):
+    """
+    3D图像输出层
+    """
+    def __init__(self, in_channels, n_classes):
+        super().__init__()
+        self.conv = SimpleConvUnit3D(in_channels, n_classes)
+        if n_classes == 1:
+            self.out = nn.Sequential(nn.Conv3d(1, 1, 1), nn.Sigmoid())
+        elif n_classes > 1:
+            self.out = nn.Sequential(nn.Conv3d(1, 1, 1), nn.Softmax())
+        else:
+            print('n_classes:', n_classes, '错误参数')
+            exit(-1)
 
     def forward(self, x):
         x = self.conv(x)

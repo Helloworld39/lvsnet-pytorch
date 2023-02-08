@@ -7,16 +7,18 @@ if not os.path.exists('./models'):
     os.makedirs('./models')
 
 dataset_name = d.DATASET_NAME_3D          # 换数据集是需要修改
-data_dir_con = d.dir_manager(dataset_name, d.DATASET_PLACE_AUTODL)
+target_name = TARGET_VESSEL
+model_name = MODEL_UNET
+place_name = d.DATASET_PLACE_AUTODL
+data_dir_con = d.dir_manager(dataset_name, place_name)
+epochs_num = 150
+
 slice_num_list = d.get_index(dataset_name)
 data_separate = d.dataset_separate(dataset_name)
 index_range = ((slice_num_list[data_separate[0][0]], slice_num_list[data_separate[0][1]]),
                (slice_num_list[data_separate[1][0]], slice_num_list[data_separate[1][1]]),
                (slice_num_list[data_separate[2][0]], slice_num_list[data_separate[2][1]]))
 create_torch_file = True
-epochs_num = 150
-model_name = MODEL_UNET
-target_name = TARGET_VESSEL
 
 if create_torch_file:
     d.create_4d_torch_file(data_dir_con['root']+'/train_input.pth', data_dir_con['image'], *index_range[0])
@@ -36,7 +38,7 @@ train = TrainUNet(in_channels=1, n_classes=1,
                   valid_dataset=valid_dataset,
                   epochs=epochs_num,
                   checkpoint_dir=os.path.join(data_dir_con['root'], 'checkpoint', model_name),
-                  model_dir=os.path.join('./models', model_name+'-'+dataset_name+'-'+target_name+'-'+str(epochs_num)+'.pth'))
+                  model_dir=os.path.join('./models', '%s-%s-%d.pth' % (model_name, target_name, epochs_num)))
 train.train()
 train.show_loss_arr()
 
@@ -44,7 +46,8 @@ predict_dataset = d.data_loader(torch.load(os.path.join(data_dir_con['root'], 'p
                                 torch.load(os.path.join(data_dir_con['root'], 'predict_gt.pth')))
 predict = PredictUNet(in_channels=1, n_classes=1,
                       predict_dataset=predict_dataset,
-                      model_dir=os.path.join('./models', model_name+'-'+dataset_name+'-'+target_name+'-'+str(epochs_num)+'.pth'),
-                      output_dir=os.path.join(data_dir_con['root'], 'output', model_name+'-'+target_name+'-'+epochs_num),
-                      output_start_index=data_separate[2][0])
+                      model_dir=os.path.join('./models', '%s-%s-%d.pth' % (model_name, target_name, epochs_num)),
+                      output_dir=os.path.join(data_dir_con['root'],
+                                              'output', '%s-%s-%d' % (model_name, target_name, epochs_num)),
+                      output_start_index=index_range[2][0])
 predict.predict()

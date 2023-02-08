@@ -11,7 +11,7 @@ from .. import evaluate_function as ev
 class TrainUNet:
     def __init__(self, in_channels, n_classes,
                  train_dataset, valid_dataset=None,
-                 lr=1e-2, epochs=150,
+                 lr=1e-2, epochs=150, batch_size=16,
                  checkpoint_dir='./checkpoint/unet', model_dir='./models/model.pth'):
         self.device = torch.device(0) if torch.cuda.is_available() else torch.device('cpu')
         self.model = UNet(in_channels, n_classes).to(self.device)
@@ -24,8 +24,8 @@ class TrainUNet:
             os.makedirs(checkpoint_dir)
         self.model_dir = model_dir
         self.is_first_train = False if os.path.exists(self.model_dir) else True
-        self.train_dataset = train_dataset(is_shuffled=True)
-        self.valid_dataset = None if not valid_dataset else valid_dataset()
+        self.train_dataset = train_dataset(batch_size=batch_size, is_shuffled=True)
+        self.valid_dataset = None if not valid_dataset else valid_dataset(batch_size=batch_size)
 
         self.loss_arr = {'train_loss': [], 'valid_loss': []}
 

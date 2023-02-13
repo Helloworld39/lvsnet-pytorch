@@ -22,11 +22,11 @@ create_torch_file = True
 
 if create_torch_file:
     d.create_4d_torch_file(data_dir_con['root']+'/train_input.pth', data_dir_con['image'], *index_range[0])
-    d.create_4d_torch_file(data_dir_con['root']+'/train_gt.pth', data_dir_con['vessel'], *index_range[0])
+    d.create_4d_torch_file(data_dir_con['root']+'/train_gt.pth', data_dir_con['label'], *index_range[0])
     d.create_4d_torch_file(data_dir_con['root']+'/valid_input.pth', data_dir_con['image'], *index_range[1])
-    d.create_4d_torch_file(data_dir_con['root']+'/valid_gt.pth', data_dir_con['vessel'], *index_range[1])
+    d.create_4d_torch_file(data_dir_con['root']+'/valid_gt.pth', data_dir_con['label'], *index_range[1])
     d.create_4d_torch_file(data_dir_con['root']+'/predict_input.pth', data_dir_con['image'], *index_range[2])
-    d.create_4d_torch_file(data_dir_con['root']+'/predict_gt.pth', data_dir_con['vessel'], *index_range[2])
+    d.create_4d_torch_file(data_dir_con['root']+'/predict_gt.pth', data_dir_con['label'], *index_range[2])
 
 train_dataset = d.data_loader(torch.load(os.path.join(data_dir_con['root'], 'train_input.pth')),
                               torch.load(os.path.join(data_dir_con['root'], 'train_gt.pth')))

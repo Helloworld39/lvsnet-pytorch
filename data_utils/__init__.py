@@ -62,19 +62,11 @@ def dir_manager(dataset_name, where_are_you):
 
     image_root = dataset_root + '/images'
     label_root = dataset_root + '/labels'
-    portal_root = dataset_root + '/portal'
-    vein_root = dataset_root + '/vein'
-    vessel_root = dataset_root + '/vessel'
-    liver_root = dataset_root + '/liver'
 
     return {
         'root': dataset_root,
         'image': image_root,
         'label': label_root,
-        'portal': portal_root,
-        'vein': vein_root,
-        'vessel': vessel_root,
-        'liver': liver_root
     }
 
 

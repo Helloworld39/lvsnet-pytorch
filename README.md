@@ -1,8 +1,8 @@
 # lvsnet-pytorch
 
 基于Pytorch的分割模型框架
-更新日期2023/02/09
-版本V0.1.6
+更新日期2023/02/13
+版本V0.1.7
 
 ## 运行环境
 
@@ -11,11 +11,14 @@ PyTorch 1.13
 cuda 11.6
 OpenCV 4.6
 torchvision 0.14
+scikit_image 0.19.3
+
 
 ## 文件结构
 ./data_utils 数据集处理工具包
 ./networks 网络结构定义
 .main.py 程序入口，运行main即可
+.vessel_processing CT数据预处理
 
 ## 版本更新
 
